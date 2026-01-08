@@ -1,0 +1,20 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/Praveenkannan-2023/devops-poc.git'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t devops-poc .'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'docker run -d devops-poc'
+            }
+        }
+    }
+}
