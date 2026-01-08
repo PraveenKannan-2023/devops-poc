@@ -1,11 +1,15 @@
 pipeline {
     agent any
  
+    tools {
+        sonarScanner 'SonarScanner'
+    }
+ 
     stages {
  
         stage('Checkout') {
             steps {
-                git 'https://github.com/Praveenkannan-2023/devops-poc.git'
+                git 'https://github.com/PraveenKannan-2023/devops-poc.git'
             }
         }
  
@@ -13,7 +17,10 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     sh '''
-                      sonar-scanner
+                      sonar-scanner \
+                      -Dsonar.projectKey=devops-poc \
+                      -Dsonar.projectName=devops-poc \
+                      -Dsonar.sources=.
                     '''
                 }
             }
@@ -27,7 +34,7 @@ pipeline {
  
         stage('Deploy') {
             steps {
-                sh 'docker run -d --rm devops-poc'
+                sh 'docker run -d --name devops-poc-container devops-poc || true'
             }
         }
     }
